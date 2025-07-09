@@ -7,10 +7,7 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"log"
-	"path/filepath"
-	"strings"
 )
 
 func main() {
@@ -18,14 +15,11 @@ func main() {
 
 	filenames := flag.Args()
 
-	log.Printf("Started mxv-demuxer %v.", version)
-
 	if len(filenames) == 0 {
-		var err error
-		if filenames, err = findFiles("."); err != nil {
-			log.Panicf("Failed to find files: %v", err)
-		}
+		log.Fatalln("No input file specified.")
 	}
+
+	log.Printf("Started mxv-demuxer %v.", version)
 
 	for _, filename := range filenames {
 		log.Printf("Starting to demux %q...", filename)
@@ -33,20 +27,4 @@ func main() {
 			log.Printf("Failed to demux %q: %v", filename, err)
 		}
 	}
-}
-
-func findFiles(root string) ([]string, error) {
-	fileInfos, err := ioutil.ReadDir(root)
-	if err != nil {
-		return nil, err
-	}
-
-	var files []string
-	for _, fileInfo := range fileInfos {
-		if !fileInfo.IsDir() && strings.ToLower(filepath.Ext(fileInfo.Name())) == ".mxv" {
-			files = append(files, filepath.Join(root, fileInfo.Name()))
-		}
-	}
-
-	return files, nil
 }
