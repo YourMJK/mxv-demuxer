@@ -11,7 +11,7 @@ import (
 )
 
 func TestParseChunk64(t *testing.T) {
-	filename := "mxv-examples/Vergleich2.mxv"
+	filename := "../sample-files/Vergleich2.mxv"
 
 	file, err := os.Open(filename)
 	if err != nil {
