@@ -8,8 +8,8 @@ $(DIR):
 	mkdir $(DIR)
 
 build: $(DIR)
-	go build -o $(DIR)/
+	go build -C src/ -o ../$(DIR)/
 
 clean:
-	go clean
+	go clean -C src/
 	rm $(DIR)/*
