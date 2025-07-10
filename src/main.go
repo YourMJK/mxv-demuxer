@@ -11,8 +11,10 @@ import (
 )
 
 func main() {
-	flag.Parse()
+	// Remove date and time from log messages
+	log.SetFlags(0)
 
+	flag.Parse()
 	filenames := flag.Args()
 
 	if len(filenames) == 0 {
