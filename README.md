@@ -4,7 +4,7 @@ A simple tool to demux ".mxv" (MAGIX Video) files.
 
 This program extracts all video frames and audio samples from mxv files.
 It doesn't convert or transcodes anything, so there is no loss in quality in the process.
-What you get is the pure/raw series of JPEGs and PCM audio data that is contained in mxv files.
+What you get is the pure/raw series of JPEGs and audio data that is contained in mxv files.
 
 You then can use Avidemux, or any other software you like, to write this data into another container that can be read by other video software.
 This, too, can be done without any loss in quality.
@@ -12,8 +12,9 @@ A detailed explanation is given below.
 
 I tested this tool on video material from:
 
-- MAGIX Video Deluxe 2007/2008
+- MAGIX Video deluxe 2007/2008
 - MAGIX Video Pro X5
+- MAGIX Video deluxe 2025
 
 ## Reason for its existence
 
@@ -59,3 +60,42 @@ If the audio and video stream run out of sync after some time, you probably need
 I can't be bothered to check right now how to do that, Avidemux is a bit quirky in this regard.
 
 ![Example showing the process](documentation/example-avidemux-boxes.png)
+
+## Building
+
+To build the application you have to have the [Go toolchain installed](https://go.dev/doc/install) and run the following command inside this directory:
+
+```bash
+go build
+```
+
+## Usage as library
+
+The MXRIFF64 and MXV parser is available in its own package.
+Run `go get github.com/Dadido3/mxv-demuxer` inside your go module, and then you can use the `mxv` package to extract audio and video data:
+
+```go
+import "github.com/Dadido3/mxv-demuxer/mxv"
+
+func main() {
+    file, err := os.Open("some.mxv")
+    if err != nil {
+        log.Panicf("Failed to open file: %v.", err)
+    }
+
+    mxvReader, err := mxv.NewReader(file)
+    if err != nil {
+        log.Panicf("Failed to read MXV file: %v.", err)
+    }
+
+    log.Printf("MXV info: %+v.", mxvReader.Info)
+}
+```
+
+Support for writing MXV files or MXRIFF64 containers is not implemented, but can be added at a later date if needed.
+
+## Thanks
+
+- Thanks to [YourMJK] for providing well crafted example files and general help with reverse engineering the MXV video format.
+
+[YourMJK]: https://github.com/YourMJK
